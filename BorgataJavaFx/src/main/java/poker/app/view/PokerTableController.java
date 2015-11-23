@@ -73,6 +73,7 @@ public class PokerTableController {
 	private int iCardDrawnCommon = 0;
 	ArrayList<Card> AllCardsDealt = new ArrayList<Card>(); 
 	ArrayList<ImageView> AllCardsImg = new ArrayList<ImageView>();
+	private boolean Human = false; 
 
 	private Player PlayerCommon = new Player("Common", 0);
 
@@ -262,7 +263,6 @@ public class PokerTableController {
 			iCardDrawnPlayer = 0;
 			iCardDrawnCommon = 0;
 			iDrawCount = 0;
-			ShowCards(AllCardsDealt, WinningHand, AllCardsImg, false);
 			break;
 		case PlayOfGame:
 			btnDraw.setDisable(false);
@@ -271,17 +271,35 @@ public class PokerTableController {
 			btnDraw.setVisible(false);
 			btnPlay.setVisible(true);
 			Winner.setVisible(true);
-			ShowCards(AllCardsDealt, WinningHand, AllCardsImg, true);
 			break;
 		case DrawingCard:
 			btnDraw.setDisable(true);
 			break;
 		}
 	}
+	
+	private void ShowCards(ArrayList<Card> CardList, Hand h, ArrayList<ImageView> CardImg, boolean b){
+		if (b){
+			int shift = -25;
+			for (Card winCard : h.getCardsInHand()){
+				for (int i = 0; i < CardList.size(); i++){
+					if (CardList.get(i).getRank() == winCard.getRank() && CardList.get(i).getSuit() == winCard.getSuit()){
+						TranslateTransition translateCard = new TranslateTransition(Duration.millis(3000), CardImg.get(i));
+						translateCard.setFromY(0);
+						translateCard.setToY(shift);
+						translateCard.play();
+					}
+				}
+			}
+		} else {
+			CardList.clear(); CardImg.clear();
+		}
+	}
+
 
 	@FXML
 	private void handlePlay() {
-
+		
 		eGameState = eGameState.StartOfGame;
 
 		// Clear all players hands
@@ -289,6 +307,7 @@ public class PokerTableController {
 		hBoxP2Cards.getChildren().clear();
 		hBoxP3Cards.getChildren().clear();
 		hBoxP4Cards.getChildren().clear();
+		ShowCards(AllCardsDealt, WinningHand, AllCardsImg, false);
 
 		// Face down card (will represent the deck)
 		ImageView imgBottomCard = new ImageView(
@@ -360,28 +379,24 @@ public class PokerTableController {
 		String strCard = "/res/img/b1fv.png";
 
 		for (int i = 0; i < nbrOfCards; i++) {
+			int slideBy = -35;
+			int rotateBy = 20;
 			ImageView img = new ImageView(new Image(getClass().getResourceAsStream(strCard), 75, 75, true, true));
 			PlayerCardBox.getChildren().add(img);
+			TranslateTransition translateCard = new TranslateTransition(Duration.millis(500), img);
+			translateCard.setFromX(0);
+			translateCard.setToX(i*slideBy);
+			
+			RotateTransition rotateCard = new RotateTransition(Duration.millis(500), img);
+			rotateCard.setFromAngle(0);
+			rotateCard.setToAngle(-50 + i*rotateBy);
+			
+			SequentialTransition SequentialTransit = new SequentialTransition(translateCard, rotateCard);
+			SequentialTransit.play();
+			
 		}
-	}
-
-	private void ShowCards(ArrayList<Card> CardList, Hand h, ArrayList<ImageView> CardImg, boolean b){
-		if (b){
-			for (Card winCard : h.getCardsInHand()){
-				for (int i = 0; i < CardList.size(); i++){
-					if (CardList.get(i).getRank() == winCard.getRank() && CardList.get(i).getSuit() == winCard.getSuit()){
-						TranslateTransition translateCard = new TranslateTransition(Duration.millis(3000), CardImg.get(i));
-						translateCard.setFromY(0);
-						translateCard.setToY(-15);
-						translateCard.play();
-					}
-				}
-			}
-		} else {
-			CardList.clear(); CardImg.clear();
-		}
-	}
-
+	}	
+		
 	@FXML
 	private void handleDraw() {
 		iCardDrawn++;
@@ -400,6 +415,7 @@ public class PokerTableController {
 
 		if (act.geteDrawAction() == eDrawAction.DrawPlayer) {
 			// Draw a card for each player seated
+			Human = true;
 			for (int iDraw = 0; iDraw < act.getiCardDrawn(); iDraw++) {
 				iCardDrawnPlayer++;
 				for (Player p : mainApp.GetSeatedPlayers()) {
@@ -432,6 +448,7 @@ public class PokerTableController {
 					gme.FindPlayerGame(gme, p).addCardToHand(c);
 					
 					tranDealCards.getChildren().add(CalculateTransition(c, PlayerCardBox, imView, iCardDrawnPlayer));
+					Human = false;
 				}
 			}
 
@@ -475,6 +492,7 @@ public class PokerTableController {
 			WinnerPosition = WinningPlayer.getiPlayerPosition();
 			System.out.println("Winning Player Position: " + WinningPlayer.getiPlayerPosition());
 			SetGameControls(eGameState.EndOfGame);
+			ShowCards(AllCardsDealt, WinningHand, AllCardsImg, true);
 
 		} else {
 			ArrayList<Hand> AllHands = null;
@@ -515,7 +533,7 @@ public class PokerTableController {
 		// This is the card that is going to be dealt to the player.
 		String strCard = "/res/img/" + c.getCardImg();
 		ImageView imgvCardDealt = new ImageView(new Image(getClass().getResourceAsStream(strCard), 96, 71, true, true));
-
+		
 		// imgvCardFaceDown - There's already a place holder card
 		// sitting in
 		// the player's hbox. It's face down. Find it
@@ -523,7 +541,9 @@ public class PokerTableController {
 		ImageView imgvCardFaceDown = (ImageView) PlayerCardBox.getChildren().get(iCardDrawn - 1);
 		Bounds bndCardDealt = imgvCardFaceDown.localToScene(imgvCardFaceDown.getBoundsInLocal());
 		Point2D pntCardDealt = new Point2D(bndCardDealt.getMinX(), bndCardDealt.getMinY());
-
+		System.out.println("The scene of the original card is " + imgvCardFaceDown.getScene());
+		System.out.println("The original card is located at " + pntCardDealt);
+		
 		// imgvDealerDeck = the card in the common area, where dealer's
 		// card
 		// is located. Find the boundary top left point.
@@ -581,7 +601,7 @@ public class PokerTableController {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				APMainScreen.getChildren().remove(ivRemove);
+					APMainScreen.getChildren().remove(ivRemove);
 			}
 
 		});
@@ -590,7 +610,7 @@ public class PokerTableController {
 	}
 
 	private ParallelTransition createFadeTransition(final ImageView iv, final Image img) {
-
+		
 		FadeTransition fadeOutTransition = new FadeTransition(Duration.seconds(.25), iv);
 		fadeOutTransition.setFromValue(1.0);
 		fadeOutTransition.setToValue(0.0);
@@ -598,15 +618,15 @@ public class PokerTableController {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				iv.setImage(img);
+					iv.setImage(img);				
 			}
 		});
 		
 		AllCardsImg.add(iv);
+
 		FadeTransition fadeInTransition = new FadeTransition(Duration.seconds(.25), iv);
 		fadeInTransition.setFromValue(0.0);
 		fadeInTransition.setToValue(1.0);
-
 
 		/*
 		 * FadeTransition fadeFlyCare = FadeOutTransition(ivFlyCard);
