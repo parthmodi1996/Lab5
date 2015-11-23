@@ -4,6 +4,9 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import enums.eGame;
+import enums.eRank;
+import enums.eSuit;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -13,9 +16,11 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.FileChooser;
 import poker.app.MainApp;
+import pokerBase.Rule;
 
 /**
  * The controller for the root layout. The root layout provides the basic
@@ -35,6 +40,18 @@ public class RootLayoutController implements Initializable {
     @FXML
     private ToggleGroup tglGames;
     
+    private static Rule GameType = null;
+       
+	public static Rule getGameType() {
+		return GameType;
+	}
+
+
+	public static void setGameType(Rule rule) {
+		RootLayoutController.GameType = rule;
+	}
+
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
@@ -111,7 +128,7 @@ public class RootLayoutController implements Initializable {
     @FXML
     private void handleAbout() {
         Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("AddressApp");
+        alert.setTitle("PokerApp");
         alert.setHeaderText("About");
         alert.setContentText("Author: Bert Gibbons");
 
@@ -125,14 +142,44 @@ public class RootLayoutController implements Initializable {
     private void handleExit() {
         System.exit(0);
     }
-    /**
-     * Opens the birthday statistics.
-     */
+    
+    private void GameRule (eGame myGame){
+		Rule rle = new Rule(myGame);
+		setGameType(rle);
+	}
+    
     @FXML
-    private void handleShowBirthdayStatistics() {
+    private RadioMenuItem FiveStudTwoJoker;
+    
+    @FXML
+    private RadioMenuItem Omaha;
+    
+    @FXML
+    private RadioMenuItem Hole_Em;
+    
+    @FXML
+    private RadioMenuItem SevenDraw;
+
+    @FXML
+    public void handleFiveStud(){
+    	GameRule(eGame.FiveStudTwoJoker);
     }
-
-
+    
+    @FXML
+    public void handleOmaha(){
+    	GameRule(eGame.Omaha);
+    }
+    
+    @FXML
+    public void handleHold_Em(){
+    	GameRule(eGame.TexasHoldEm);
+    }
+    
+    @FXML
+    public void handle7Draw(){
+    	GameRule(eGame.SevenDraw);
+    }
+    
 	public ToggleGroup getTglGames() {
 		return tglGames;
 	}

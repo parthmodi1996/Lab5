@@ -10,7 +10,7 @@
 }
 
 .label-bright {
-    -fx-font-size: 11pt;
+    -fx-font-size: 20pt;
     -fx-font-family: "Segoe UI Semibold";
     -fx-text-fill: black;
     -fx-opacity: 1;

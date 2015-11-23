@@ -6,6 +6,8 @@ import javax.xml.bind.annotation.XmlElement;
 
 import enums.eRank;
 import enums.eSuit;
+import javafx.geometry.Point2D;
+import javafx.scene.image.ImageView;
 
 public class CardDomainModel {
 	@XmlElement
@@ -18,7 +20,6 @@ public class CardDomainModel {
 	private String CardImg;
 	
 	private int CardNbr;
-	
 	 
 	/**
 	 * Keep the no-arg constructor private.  I don't want 'Card' created without attributes.
@@ -85,6 +86,8 @@ public class CardDomainModel {
 	public void setCardNbr(int cardNbr) {
 		CardNbr = cardNbr;
 	}
+
+
 
 	/**
 	 * CardRank Comparator is used for sorting the collection by rank

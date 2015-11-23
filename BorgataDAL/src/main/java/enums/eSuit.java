@@ -3,7 +3,7 @@ package enums;
 
 public enum eSuit {
 
-	HEARTS(1), SPADES(2), CLUBS(3), DIAMONDS(4), JOKER(99);
+	HEARTS(1), SPADES(2), CLUBS(3), DIAMONDS(4), JOKER(99), NULL(1000);
 	
 	private eSuit(final int suit){
 		this.suit = suit;

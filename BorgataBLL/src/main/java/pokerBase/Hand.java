@@ -116,7 +116,7 @@ public class Hand extends HandDomainModel {
 		for (Hand h : CombinHands) {
 			h = Hand.EvalHand(h);
 		}
-
+		
 		return CombinHands;
 
 	}

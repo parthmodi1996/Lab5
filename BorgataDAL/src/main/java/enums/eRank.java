@@ -15,7 +15,8 @@ public enum eRank {
 	QUEEN(12), 
 	KING(13), 
 	ACE(14),
-	JOKER(99);
+	JOKER(99),
+	NULL(1000);
 
 	private eRank(final int rank){
 		this.rank = rank;

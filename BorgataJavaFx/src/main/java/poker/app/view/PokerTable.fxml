@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.effect.*?>
@@ -10,13 +11,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="APMainScreen" prefHeight="600.0" prefWidth="1206.0" style="-fx-background-color: green;" stylesheets="@DarkTheme.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poker.app.view.PokerTableController">
+<AnchorPane fx:id="APMainScreen" prefHeight="600.0" prefWidth="1216.0" style="-fx-background-color: green;" stylesheets="@DarkTheme.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poker.app.view.PokerTableController">
    <children>
-      <BorderPane layoutX="-1.0" layoutY="-1.0" prefHeight="600.0" prefWidth="1206.0" style="-fx-background-color: green;">
+      <BorderPane layoutX="-1.0" layoutY="-1.0" prefHeight="600.0" prefWidth="1206.0" style="-fx-background-color: green;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <bottom>
-            <AnchorPane prefHeight="107.0" prefWidth="800.0">
+            <AnchorPane>
                <children>
-                  <HBox layoutX="396.0" layoutY="4.0" prefHeight="100.0" prefWidth="414.0">
+                  <HBox layoutX="396.0" layoutY="4.0" prefHeight="100.0" prefWidth="414.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="380.0" AnchorPane.rightAnchor="342.0" AnchorPane.topAnchor="3.0">
                      <children>
                         <GridPane prefHeight="21.0" prefWidth="315.0">
                           <columnConstraints>
@@ -47,9 +48,9 @@
             </AnchorPane>
          </bottom>
          <top>
-            <AnchorPane prefHeight="107.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+            <AnchorPane BorderPane.alignment="CENTER">
                <children>
-                  <HBox layoutX="396.0" layoutY="4.0" prefHeight="100.0" prefWidth="414.0">
+                  <HBox layoutX="396.0" layoutY="4.0" prefHeight="100.0" prefWidth="414.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="380.0" AnchorPane.rightAnchor="342.0" AnchorPane.topAnchor="3.0">
                      <children>
                         <GridPane prefHeight="21.0" prefWidth="315.0">
                            <columnConstraints>
@@ -73,7 +74,7 @@
             </AnchorPane>
          </top>
          <left>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <AnchorPane BorderPane.alignment="CENTER">
                <children>
                   <HBox layoutX="15.0" layoutY="145.0" prefHeight="100.0" prefWidth="275.0">
                      <children>
@@ -99,7 +100,7 @@
             </AnchorPane>
          </left>
          <right>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <AnchorPane prefHeight="388.0" prefWidth="380.0" BorderPane.alignment="CENTER">
                <children>
                   <HBox layoutY="145.0" prefHeight="100.0" prefWidth="275.0">
                      <children>
@@ -125,20 +126,24 @@
             </AnchorPane>
          </right>
          <center>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <AnchorPane BorderPane.alignment="CENTER">
                <children>
-                  <HBox layoutX="151.0" layoutY="199.0" prefHeight="173.0" prefWidth="339.0">
+                  <HBox layoutX="151.0" layoutY="199.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="70.0" AnchorPane.topAnchor="155.0">
                      <children>
-                        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="173.0" prefWidth="338.0" style="-fx-background-color: green;">
+                        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="168.0" prefWidth="377.0" style="-fx-background-color: green;">
                           <items>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" style="-fx-background-color: green;">
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="96.0" prefWidth="346.0" style="-fx-background-color: green;" SplitPane.resizableWithParent="false">
                                  <children>
-                                    <HBox fx:id="HboxCommunityCards" layoutX="14.0" layoutY="10.0" prefHeight="68.0" prefWidth="317.0" style="-fx-background-color: green;" />
-                                 </children></AnchorPane>
+                                    <HBox fx:id="HboxCommunityCards" layoutX="14.0" layoutY="10.0" prefHeight="82.0" prefWidth="346.0" style="-fx-background-color: green;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" />
+                                 </padding>
+                              </AnchorPane>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" style="-fx-background-color: green;">
                                  <children>
                                     <Button fx:id="btnPlay" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#handlePlay" text="Play" />
-                                    <Button fx:id="btnDraw" layoutX="89.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleDraw" text="Draw" />
+                                    <Button fx:id="btnDraw" layoutX="89.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleDraw" onMouseClicked="#handleWinner" text="Draw" />
                                     <HBox fx:id="HboxCommonArea" layoutX="171.0" layoutY="14.0" prefHeight="55.0" prefWidth="160.0" style="-fx-background-color: green;" />
                                  </children>
                               </AnchorPane>
@@ -146,9 +151,36 @@
                         </SplitPane>
                      </children>
                   </HBox>
+                  <VBox fx:id="Winner" prefHeight="81.0" prefWidth="141.0" AnchorPane.bottomAnchor="277.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="195.0" AnchorPane.topAnchor="30.0">
+                     <children>
+                        <AnchorPane prefHeight="56.0" prefWidth="141.0">
+                           <children>
+                              <Label fx:id="lblWinnerTag" alignment="CENTER" prefHeight="52.0" prefWidth="141.0" style="-fx-background-color: yellow;" text="Winner" textAlignment="CENTER" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
+                                 <font>
+                                    <Font name="Arial Bold" size="20.0" />
+                                 </font>
+                                 <effect>
+                                    <Glow level="0.37" />
+                                 </effect>
+                              </Label>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane prefHeight="51.0" prefWidth="74.0">
+                           <children>
+                              <Label fx:id="lblWinner" alignment="CENTER" prefHeight="47.0" prefWidth="141.0" style="-fx-background-color: yellow;" text="Label" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <effect>
+                                    <Reflection bottomOpacity="0.11" />
+                                 </effect></Label>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </VBox>
                </children>
             </AnchorPane>
-         </center>         
+         </center>
+         <padding>
+            <Insets right="10.0" />
+         </padding>         
       </BorderPane>
    </children>
 </AnchorPane>
