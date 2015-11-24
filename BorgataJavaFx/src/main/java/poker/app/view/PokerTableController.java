@@ -73,6 +73,7 @@ public class PokerTableController {
 	private int iCardDrawnCommon = 0;
 	ArrayList<Card> AllCardsDealt = new ArrayList<Card>(); 
 	ArrayList<ImageView> AllCardsImg = new ArrayList<ImageView>();
+	Image FakeCard = null;
 	private boolean Human = false; 
 
 	private Player PlayerCommon = new Player("Common", 0);
@@ -280,14 +281,20 @@ public class PokerTableController {
 	
 	private void ShowCards(ArrayList<Card> CardList, Hand h, ArrayList<ImageView> CardImg, boolean b){
 		if (b){
-			int shift = -25;
+			int shift = -20;
 			for (Card winCard : h.getCardsInHand()){
 				for (int i = 0; i < CardList.size(); i++){
 					if (CardList.get(i).getRank() == winCard.getRank() && CardList.get(i).getSuit() == winCard.getSuit()){
+						String StrCard = "/res/img/" + CardList.get(i).getCardImg();
+						Image cardShow = new Image(getClass().getResourceAsStream(StrCard), 75, 75, true, true);
+						ParallelTransition transShowCard = createFadeTransition(CardImg.get(i), cardShow, false);
+						
 						TranslateTransition translateCard = new TranslateTransition(Duration.millis(3000), CardImg.get(i));
 						translateCard.setFromY(0);
 						translateCard.setToY(shift);
-						translateCard.play();
+						
+						SequentialTransition execTrans = new SequentialTransition(transShowCard, translateCard);
+						execTrans.play();
 					}
 				}
 			}
@@ -377,23 +384,28 @@ public class PokerTableController {
 
 		}
 		String strCard = "/res/img/b1fv.png";
-
+		FakeCard = new Image(getClass().getResourceAsStream(strCard), 75, 75, true, true);
+		
 		for (int i = 0; i < nbrOfCards; i++) {
 			int slideBy = -35;
 			int rotateBy = 20;
+			int translation = i*slideBy;
+			int rotation = -50 + i*rotateBy;
 			ImageView img = new ImageView(new Image(getClass().getResourceAsStream(strCard), 75, 75, true, true));
 			PlayerCardBox.getChildren().add(img);
+			PlayerCardBox.getChildren().get(i).setTranslateX(translation);
+			PlayerCardBox.getChildren().get(i).setRotate(rotation);
+			
 			TranslateTransition translateCard = new TranslateTransition(Duration.millis(500), img);
 			translateCard.setFromX(0);
-			translateCard.setToX(i*slideBy);
+			translateCard.setToX(PlayerCardBox.getChildren().get(i).getTranslateX());
 			
 			RotateTransition rotateCard = new RotateTransition(Duration.millis(500), img);
 			rotateCard.setFromAngle(0);
-			rotateCard.setToAngle(-50 + i*rotateBy);
+			rotateCard.setToAngle(PlayerCardBox.getChildren().get(i).getRotate());
 			
 			SequentialTransition SequentialTransit = new SequentialTransition(translateCard, rotateCard);
 			SequentialTransit.play();
-			
 		}
 	}	
 		
@@ -415,9 +427,9 @@ public class PokerTableController {
 
 		if (act.geteDrawAction() == eDrawAction.DrawPlayer) {
 			// Draw a card for each player seated
-			Human = true;
 			for (int iDraw = 0; iDraw < act.getiCardDrawn(); iDraw++) {
 				iCardDrawnPlayer++;
+				Human = true;
 				for (Player p : mainApp.GetSeatedPlayers()) {
 					Card c = gme.getGameDeck().drawFromDeck();
 					AllCardsDealt.add(c);
@@ -541,8 +553,6 @@ public class PokerTableController {
 		ImageView imgvCardFaceDown = (ImageView) PlayerCardBox.getChildren().get(iCardDrawn - 1);
 		Bounds bndCardDealt = imgvCardFaceDown.localToScene(imgvCardFaceDown.getBoundsInLocal());
 		Point2D pntCardDealt = new Point2D(bndCardDealt.getMinX(), bndCardDealt.getMinY());
-		System.out.println("The scene of the original card is " + imgvCardFaceDown.getScene());
-		System.out.println("The original card is located at " + pntCardDealt);
 		
 		// imgvDealerDeck = the card in the common area, where dealer's
 		// card
@@ -555,9 +565,22 @@ public class PokerTableController {
 		SequentialTransition transMoveRotCard = createTransition(pntCardDeck, pntCardDealt, imView);
 
 		// Add a parallel transition to the card (fade in/fade out).
-		final ParallelTransition transFadeCardInOut = createFadeTransition(imgvCardFaceDown,
-				new Image(getClass().getResourceAsStream(strCard), 75, 75, true, true));
-
+		ParallelTransition transFadeCardInOut = new ParallelTransition();
+		if (Human || PlayerCardBox == HboxCommunityCards){
+			ParallelTransition transFadeCard = createFadeTransition(imgvCardFaceDown,
+					new Image(getClass().getResourceAsStream(strCard), 75, 75, true, true), true);
+			transFadeCardInOut = transFadeCard;
+		}
+		else{
+			ParallelTransition transFadeCard = createFadeTransition(imgvCardFaceDown,
+					new Image(getClass().getResourceAsStream(strCard), 75, 75, true, true), true);
+			
+			transFadeCard = createFadeTransition(imgvCardFaceDown,
+					FakeCard, false);
+			
+			transFadeCardInOut = transFadeCard;
+		}
+		
 		SequentialTransition transAllActions = new SequentialTransition();
 		transAllActions.getChildren().addAll(transMoveRotCard, transFadeCardInOut);
 
@@ -609,7 +632,7 @@ public class PokerTableController {
 		return seqTrans;
 	}
 
-	private ParallelTransition createFadeTransition(final ImageView iv, final Image img) {
+	private ParallelTransition createFadeTransition(final ImageView iv, final Image img, boolean Trans) {
 		
 		FadeTransition fadeOutTransition = new FadeTransition(Duration.seconds(.25), iv);
 		fadeOutTransition.setFromValue(1.0);
@@ -622,7 +645,9 @@ public class PokerTableController {
 			}
 		});
 		
-		AllCardsImg.add(iv);
+		if (Trans){
+			AllCardsImg.add(iv);
+		}
 
 		FadeTransition fadeInTransition = new FadeTransition(Duration.seconds(.25), iv);
 		fadeInTransition.setFromValue(0.0);

@@ -11,12 +11,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="APMainScreen" prefHeight="700.0" prefWidth="1244.0" style="-fx-background-color: green;" stylesheets="@DarkTheme.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poker.app.view.PokerTableController">
+<AnchorPane fx:id="APMainScreen" prefHeight="800.0" prefWidth="1133.0" style="-fx-background-color: green;" stylesheets="@DarkTheme.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poker.app.view.PokerTableController">
    <children>
       <BorderPane layoutX="-1.0" layoutY="-1.0" prefHeight="600.0" prefWidth="1206.0" style="-fx-background-color: green;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <bottom>
             <AnchorPane prefHeight="120.0" prefWidth="1244.0" BorderPane.alignment="CENTER">
                <children>
+                  <Button fx:id="btnToggle" layoutX="35.0" layoutY="42.0" mnemonicParsing="false" onAction="#GetToggleGroup" text="Button" />
                   <HBox layoutX="480.0" AnchorPane.bottomAnchor="4.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <GridPane>
@@ -29,10 +30,16 @@
                             <RowConstraints maxHeight="75.0" minHeight="10.0" prefHeight="75.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <TextField fx:id="txtP1Name" prefHeight="37.0" prefWidth="94.0" style="-fx-background-color: lightgreen;" />
-                              <HBox fx:id="hBoxP1Cards" alignment="BOTTOM_CENTER" GridPane.columnIndex="1" />
-                              <ToggleButton fx:id="btnP1SitLeave" mnemonicParsing="false" onAction="#handleP1SitLeave" prefHeight="35.0" prefWidth="85.0" styleClass="togglebutton" text="Sit" GridPane.rowIndex="1" />
                               <Label fx:id="lblP1Name" prefHeight="33.0" prefWidth="92.0" />
+                              <TextField fx:id="txtP1Name" prefHeight="37.0" prefWidth="94.0" style="-fx-background-color: lightgreen;" />
+                              <ToggleButton fx:id="btnP1SitLeave" mnemonicParsing="false" onAction="#handleP1SitLeave" prefHeight="35.0" prefWidth="85.0" styleClass="togglebutton" text="Sit" GridPane.rowIndex="1" />
+                              <HBox fx:id="hBoxP1Cards" alignment="TOP_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                                 <padding>
+                                    <Insets bottom="25.0" left="20.0" />
+                                 </padding></HBox>
                            </children>
                            <opaqueInsets>
                               <Insets top="5.0" />
@@ -43,7 +50,6 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </opaqueInsets>
                   </HBox>
-                  <Button fx:id="btnToggle" layoutX="35.0" layoutY="42.0" mnemonicParsing="false" onAction="#GetToggleGroup" text="Button" />
                </children>
             </AnchorPane>
          </bottom>
