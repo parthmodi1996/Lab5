@@ -198,6 +198,7 @@ public class PokerTableController {
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 		Winner.setVisible(false);
+		btnToggle.setVisible(false);
 	}
 
 	@FXML
@@ -395,10 +396,12 @@ public class PokerTableController {
 		FakeCard = new Image(getClass().getResourceAsStream(strCard), 75, 75, true, true);
 		
 		for (int i = 0; i < nbrOfCards; i++) {
-			int slideBy = -35;
-			int rotateBy = 20;
-			int translation = i*slideBy;
-			int rotation = -50 + i*rotateBy;
+			double slideBy = -35;
+			double rotateBy = 15;
+			double maxRot = rotateBy*(nbrOfCards-1);
+			double translation = i*slideBy;
+			double rotation = -(maxRot/2) + i*rotateBy;
+			
 			ImageView img = new ImageView(new Image(getClass().getResourceAsStream(strCard), 75, 75, true, true));
 			PlayerCardBox.getChildren().add(img);
 			PlayerCardBox.getChildren().get(i).setTranslateX(translation);
