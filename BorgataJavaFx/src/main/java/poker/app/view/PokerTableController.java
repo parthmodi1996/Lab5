@@ -264,6 +264,10 @@ public class PokerTableController {
 			iCardDrawnPlayer = 0;
 			iCardDrawnCommon = 0;
 			iDrawCount = 0;
+			btnP1SitLeave.setVisible(false);
+			btnP2SitLeave.setVisible(false);
+			btnP3SitLeave.setVisible(false);
+			btnP4SitLeave.setVisible(false);
 			break;
 		case PlayOfGame:
 			btnDraw.setDisable(false);
@@ -272,6 +276,10 @@ public class PokerTableController {
 			btnDraw.setVisible(false);
 			btnPlay.setVisible(true);
 			Winner.setVisible(true);
+			btnP1SitLeave.setVisible(true);
+			btnP2SitLeave.setVisible(true);
+			btnP3SitLeave.setVisible(true);
+			btnP4SitLeave.setVisible(true);
 			break;
 		case DrawingCard:
 			btnDraw.setDisable(true);
