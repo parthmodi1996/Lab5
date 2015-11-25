@@ -1,5 +1,6 @@
 package poker.app.view;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +41,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import poker.app.MainApp;
 import pokerBase.Card;
@@ -74,7 +76,8 @@ public class PokerTableController {
 	ArrayList<Card> AllCardsDealt = new ArrayList<Card>(); 
 	ArrayList<ImageView> AllCardsImg = new ArrayList<ImageView>();
 	Image FakeCard = null;
-	private boolean Human = false; 
+	private boolean Human = false;
+	private boolean Joker = false;
 
 	private Player PlayerCommon = new Player("Common", 0);
 
@@ -146,6 +149,12 @@ public class PokerTableController {
 	
 	@FXML
 	public Label lblWinnerTag;
+	
+	@FXML
+	public Label Note1;
+	
+	@FXML
+	public Label Note2;
 
 	@FXML
 	private void handleWinner(){
@@ -197,6 +206,7 @@ public class PokerTableController {
 	 */
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
+		Note2.setVisible(false);
 		Winner.setVisible(false);
 		btnToggle.setVisible(false);
 	}
@@ -243,6 +253,10 @@ public class PokerTableController {
 			btnSitLeave.setText("Leave");
 			txtPlayer.setVisible(false);
 			bSit = true;
+			if (txtPlayer.getText().equals((String) "Joker")){
+				Joker = true;
+			}
+			Note1.setVisible(false);
 		} else {
 			mainApp.RemovePlayerFromTable(iPlayerPosition);
 			btnSitLeave.setText("Sit");
@@ -269,6 +283,7 @@ public class PokerTableController {
 			btnP2SitLeave.setVisible(false);
 			btnP3SitLeave.setVisible(false);
 			btnP4SitLeave.setVisible(false);
+			Note2.setVisible(false);
 			break;
 		case PlayOfGame:
 			btnDraw.setDisable(false);
@@ -281,6 +296,9 @@ public class PokerTableController {
 			btnP2SitLeave.setVisible(true);
 			btnP3SitLeave.setVisible(true);
 			btnP4SitLeave.setVisible(true);
+			if (Joker != true){
+			Note2.setVisible(true);
+			}
 			break;
 		case DrawingCard:
 			btnDraw.setDisable(true);
@@ -290,21 +308,40 @@ public class PokerTableController {
 	
 	private void ShowCards(ArrayList<Card> CardList, Hand h, ArrayList<ImageView> CardImg, boolean b){
 		if (b){
+			SequentialTransition execTrans = new SequentialTransition();
 			int shift = -20;
-			for (Card winCard : h.getCardsInHand()){
-				for (int i = 0; i < CardList.size(); i++){
-					if (CardList.get(i).getRank() == winCard.getRank() && CardList.get(i).getSuit() == winCard.getSuit()){
+
+			for (int i = 0; i < CardList.size(); i++){
+				for (Card winCard : h.getCardsInHand()){
+//					if (CardList.get(i).getRank() == winCard.getRank() && CardList.get(i).getSuit() == winCard.getSuit()){
 						String StrCard = "/res/img/" + CardList.get(i).getCardImg();
 						Image cardShow = new Image(getClass().getResourceAsStream(StrCard), 75, 75, true, true);
-						ParallelTransition transShowCard = createFadeTransition(CardImg.get(i), cardShow, false);
-						
-						TranslateTransition translateCard = new TranslateTransition(Duration.millis(3000), CardImg.get(i));
-						translateCard.setFromY(0);
-						translateCard.setToY(shift);
-						
-						SequentialTransition execTrans = new SequentialTransition(transShowCard, translateCard);
+						ParallelTransition transShowCard = new ParallelTransition();
+						TranslateTransition translateCard = new TranslateTransition();
+						if (CardList.get(i).getRank() == winCard.getRank() && CardList.get(i).getSuit() == winCard.getSuit()){
+							transShowCard = createFadeTransition(CardImg.get(i), cardShow, false, 0.25);
+							translateCard = new TranslateTransition(Duration.millis(3000), CardImg.get(i));
+							if (Joker != true){
+								translateCard.setFromY(0);
+								translateCard.setToY(shift);
+							}
+						}
+						execTrans = new SequentialTransition(transShowCard, translateCard);
 						execTrans.play();
-					}
+						if (Joker){
+							final ImageView ivOfCard = CardImg.get(i);
+							execTrans.setOnFinished(new EventHandler<ActionEvent>() {		
+								
+								@Override
+								public void handle(ActionEvent arg0) {
+									ivOfCard.setImage(new Image(getClass().getResourceAsStream("/res/img/54.png"), 75, 75, true, true));				
+								}
+							});
+						}
+						
+						
+//					}
+
 				}
 			}
 		} else {
@@ -469,7 +506,7 @@ public class PokerTableController {
 
 					}
 					gme.FindPlayerGame(gme, p).addCardToHand(c);
-					
+				
 					tranDealCards.getChildren().add(CalculateTransition(c, PlayerCardBox, imView, iCardDrawnPlayer));
 					Human = false;
 				}
@@ -515,6 +552,7 @@ public class PokerTableController {
 			WinnerPosition = WinningPlayer.getiPlayerPosition();
 			System.out.println("Winning Player Position: " + WinningPlayer.getiPlayerPosition());
 			SetGameControls(eGameState.EndOfGame);
+			
 			ShowCards(AllCardsDealt, WinningHand, AllCardsImg, true);
 
 		} else {
@@ -579,15 +617,14 @@ public class PokerTableController {
 		ParallelTransition transFadeCardInOut = new ParallelTransition();
 		if (Human || PlayerCardBox == HboxCommunityCards){
 			ParallelTransition transFadeCard = createFadeTransition(imgvCardFaceDown,
-					new Image(getClass().getResourceAsStream(strCard), 75, 75, true, true), true);
+					new Image(getClass().getResourceAsStream(strCard), 75, 75, true, true), true, 0.25);
 			transFadeCardInOut = transFadeCard;
 		}
 		else{
 			ParallelTransition transFadeCard = createFadeTransition(imgvCardFaceDown,
-					new Image(getClass().getResourceAsStream(strCard), 75, 75, true, true), true);
+					new Image(getClass().getResourceAsStream(strCard), 75, 75, true, true), true, 0.25);
 			
-			transFadeCard = createFadeTransition(imgvCardFaceDown,
-					FakeCard, false);
+			transFadeCard = createFadeTransition(imgvCardFaceDown, FakeCard, false, 0.25);
 			
 			transFadeCardInOut = transFadeCard;
 		}
@@ -643,9 +680,9 @@ public class PokerTableController {
 		return seqTrans;
 	}
 
-	private ParallelTransition createFadeTransition(final ImageView iv, final Image img, boolean Trans) {
-		
-		FadeTransition fadeOutTransition = new FadeTransition(Duration.seconds(.25), iv);
+	private ParallelTransition createFadeTransition(final ImageView iv, final Image img, boolean Trans, Double seconds) {
+		Duration time = Duration.seconds(seconds);
+		FadeTransition fadeOutTransition = new FadeTransition(time, iv);
 		fadeOutTransition.setFromValue(1.0);
 		fadeOutTransition.setToValue(0.0);
 		fadeOutTransition.setOnFinished(new EventHandler<ActionEvent>() {
@@ -660,7 +697,7 @@ public class PokerTableController {
 			AllCardsImg.add(iv);
 		}
 
-		FadeTransition fadeInTransition = new FadeTransition(Duration.seconds(.25), iv);
+		FadeTransition fadeInTransition = new FadeTransition(time, iv);
 		fadeInTransition.setFromValue(0.0);
 		fadeInTransition.setToValue(1.0);
 
